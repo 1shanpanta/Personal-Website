@@ -14,13 +14,13 @@ export default function Home() {
         <h2 className="text-3xl text-white mb-8">AI | ML| Robotics</h2>
         <div className="flex space-x-4">
           {/* Social Media Icons */}
-          <a href="https://twitter.com/IshanPanta1" target="_blank" rel="noopener noreferrer">
+          <a href="https://twitter.com/1shanpanta" target="_blank" rel="noopener noreferrer">
             <FaTwitter className="w-6 h-6 text-white hover:text-blue-40 transition-colors duration-300" />
           </a>
-          <a href="https://www.linkedin.com/in/ishan-panta-7101b61b1/" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.linkedin.com/in/1shanpanta" target="_blank" rel="noopener noreferrer">
             <FaLinkedinIn className="w-7 h-7 text-white hover:text-blue-60 transition-colors duration-300" />
           </a>
-          <a href="https://github.com/1shan-pixel" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/1shanpanta" target="_blank" rel="noopener noreferrer">
             <FaGithub className="w-6 h-6 text-white hover:text-gray-70 transition-colors duration-300" />
           </a>
         </div>
