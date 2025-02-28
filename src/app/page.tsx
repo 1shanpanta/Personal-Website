@@ -11,7 +11,7 @@ export default function Home() {
       {/* Content */}
       <div className="flex flex-col items-center justify-center h-full relative">
         <h1 className="text-3xl  text-white mb-4">Ishan Panta</h1>
-        <h2 className="text-3xl text-white mb-8">AI | ML| Robotics</h2>
+        <h2 className="text-3xl text-white mb-8">AI | Web Dev | Robotics</h2>
         <div className="flex space-x-4">
           {/* Social Media Icons */}
           <a href="https://twitter.com/1shanpanta" target="_blank" rel="noopener noreferrer">
