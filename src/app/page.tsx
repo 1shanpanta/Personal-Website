@@ -1,4 +1,4 @@
-import { FaGithub, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaLinkedinIn, FaMedium } from "react-icons/fa";
 
 export default function Home() {
   return (
@@ -14,8 +14,8 @@ export default function Home() {
         <h2 className="text-xl md:text-3xl text-white mb-8">AI | Web Dev | Robotics</h2>
         <div className="flex space-x-6">
           {/* Social Media Icons */}
-          <a href="https://twitter.com/1shanpanta" target="_blank" rel="noopener noreferrer">
-            <FaTwitter className="w-8 h-8 md:w-6 md:h-6 text-white hover:text-blue-400 transition-colors duration-300" />
+          <a href="https://medium.com/@1shanpanta" target="_blank" rel="noopener noreferrer">
+            <FaMedium className="w-8 h-8 md:w-6 md:h-6 text-white hover:text-blue-400 transition-colors duration-300" />
           </a>
           <a href="https://www.linkedin.com/in/1shanpanta" target="_blank" rel="noopener noreferrer">
             <FaLinkedinIn className="w-8 h-8 md:w-7 md:h-7 text-white hover:text-blue-600 transition-colors duration-300" />
