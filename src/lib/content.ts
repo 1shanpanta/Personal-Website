@@ -17,7 +17,7 @@ export const HERO = {
   role: "Full-stack developer",
   company: "D&S Inc",
   place: "Kathmandu",
-  bio: "A nerd learning to build real systems, with AI in the loop on almost every commit. Enterprise work by day, and whatever I wanted to exist that week by night.",
+  bio: "A nerd learning to build real systems, with AI in the loop on almost every commit. Enterprise work by day. At night I build small things to find out how the big ones work.",
 };
 
 export const PROJECTS: Project[] = [
@@ -49,13 +49,13 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    name: "claude-analytics",
+    name: "youtube-clipper",
     blurb:
-      "Dashboard over Claude Code history: sessions, token counts, cost and the tools each run reached for.",
-    stack: ["TypeScript", "Next.js"],
+      "Loops one section of a YouTube video. Paste a URL, set the start and end, and it repeats that clip until you close it.",
+    stack: ["React", "TypeScript"],
     links: [
-      { label: "site", href: "https://claude-analytics-omega.vercel.app" },
-      { label: "code", href: "https://github.com/1shanpanta/claude-analytics" },
+      { label: "site", href: "https://ytlooper.vercel.app" },
+      { label: "code", href: "https://github.com/1shanpanta/youtube-clipper" },
     ],
   },
 ];
