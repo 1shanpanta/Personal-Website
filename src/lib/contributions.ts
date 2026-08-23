@@ -1,3 +1,6 @@
+/** Revalidation is request-driven, not a timer: nothing refetches until someone visits. */
+const FIVE_DAYS = 5 * 24 * 60 * 60;
+
 export type Day = { date: string; level: number; count: number };
 
 export type Calendar = {
@@ -20,7 +23,7 @@ export async function getContributions(user: string): Promise<Calendar | null> {
   try {
     const res = await fetch(`https://github.com/users/${user}/contributions`, {
       headers: { accept: "text/html" },
-      next: { revalidate: 3600 },
+      next: { revalidate: FIVE_DAYS },
     });
     if (!res.ok) return null;
     html = await res.text();
