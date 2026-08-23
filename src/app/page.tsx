@@ -72,8 +72,7 @@ export default async function Home() {
           {/* DotGothic16 sets Latin in a full-width cell, so the leading I carries a
               wide side bearing. Pulled left in em so it holds at every size. */}
           <h1 className="-ml-[0.2em] mt-1 font-dot text-[13vw] leading-[1.04] md:text-[6rem]">
-            {HERO.first}
-            <span className="knock">{HERO.last}</span>
+            {HERO.first} {HERO.last}
           </h1>
           <p className="mt-5 font-mono text-[11px] tracking-label text-dim md:text-xs">
             {HERO.role.toUpperCase()} <span className="text-fg">/</span>{" "}

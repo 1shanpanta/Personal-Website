@@ -41,22 +41,6 @@ body {
   outline-offset: 2px;
 }
 
-/* Knocked-out word: the name half that reads as a lit panel.
-   DotGothic16 carries a tall ascent, so the box is clamped to the glyphs or it
-   overlaps the lines above and below. */
-.knock {
-  display: inline-block;
-  background: rgb(var(--fg));
-  color: rgb(var(--void));
-  line-height: 0.74;
-  padding: 0.13em 0.14em 0.09em;
-  vertical-align: baseline;
-  border-radius: 0.06em;
-  /* White type butting a white block merges at the seam, but a word space left
-     a hole in the name. This sits between the two. */
-  margin-left: 0.18em;
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
