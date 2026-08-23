@@ -105,14 +105,6 @@ export default async function Home() {
               <ProjectPanel key={project.name} project={project} index={i} />
             ))}
           </ul>
-          <a
-            href={`https://github.com/${GITHUB_USER}?tab=repositories`}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-[3px] block rounded-lg bg-panel px-4 py-3 font-mono text-[10px] tracking-label text-dim transition-colors duration-200 ease-decel hover:bg-fg hover:text-void"
-          >
-            ALL REPOSITORIES
-          </a>
         </section>
 
         <footer className="mt-14 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-panel px-4 py-3 font-mono text-[10px] tracking-label text-dim">
