@@ -22,16 +22,6 @@ export const HERO = {
 
 export const PROJECTS: Project[] = [
   {
-    name: "open-wispr",
-    blurb:
-      "Speech to text anywhere on macOS, transcribed on-device by a local Whisper model.",
-    stack: ["Swift", "WhisperKit"],
-    links: [
-      { label: "site", href: "https://open-wispr.com" },
-      { label: "code", href: "https://github.com/1shanpanta/open-wispr" },
-    ],
-  },
-  {
     name: "localshot",
     blurb:
       "Screenshot capture and annotation for macOS, drawn straight onto AppKit windows.",
