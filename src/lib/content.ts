@@ -39,6 +39,13 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
+    name: "pawfit",
+    blurb:
+      "A fitness virtual pet. Walking is the input, and a menagerie of cats and dogs is what grows out of it.",
+    stack: ["Expo", "TypeScript"],
+    links: [{ label: "site", href: "https://pawfit-web.vercel.app" }],
+  },
+  {
     name: "youtube-clipper",
     blurb:
       "Loops one section of a YouTube video. Paste a URL, set the start and end, and it repeats that clip until you close it.",

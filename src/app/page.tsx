@@ -53,15 +53,6 @@ function ProjectPanel({ project, index }: { project: Project; index: number }) {
 export default async function Home() {
   const calendar = await getContributions(GITHUB_USER);
 
-  const peak = calendar
-    ? calendar.weeks
-        .flat()
-        .reduce(
-          (best, day) => (day && (!best || day.count > best.count) ? day : best),
-          null as { date: string; count: number } | null,
-        )
-    : null;
-
   return (
     <div className="min-h-screen">
       <main className="mx-auto max-w-4xl px-4 pb-20 md:px-6">
@@ -89,10 +80,7 @@ export default async function Home() {
 
         {calendar ? (
           <section className="pt-14">
-            <Meta id="board">
-              {calendar.total} CONTRIBUTIONS, LAST 12 MONTHS
-              {peak ? ` / PEAK ${peak.count} ON ${peak.date}` : ""}
-            </Meta>
+            <Meta id="board">{calendar.total} CONTRIBUTIONS, LAST 12 MONTHS</Meta>
             <ContributionGrid calendar={calendar} />
           </section>
         ) : null}
