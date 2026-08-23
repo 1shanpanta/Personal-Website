@@ -34,9 +34,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* next/font has no japanese subset for DotGothic16, and the katakana needs it. */}
+        {/* next/font has no japanese subset for DotGothic16, and the katakana needs it.
+            no-page-custom-font targets the pages router, where a _document link
+            covers one page only. In an app-router root layout it covers every route. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap"

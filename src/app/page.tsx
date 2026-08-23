@@ -24,12 +24,7 @@ function ProjectPanel({ project, index }: { project: Project; index: number }) {
       <span className="font-mono text-[11px] tabular-nums text-dim">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <div className="mt-2 md:mt-0">
-        <h3 className="font-dot text-xl leading-tight">{project.name}</h3>
-        <p className="mt-1 font-mono text-[10px] tracking-label text-dim">
-          {project.stack.join(" / ")}
-        </p>
-      </div>
+      <h3 className="mt-2 font-dot text-xl leading-tight md:mt-0">{project.name}</h3>
       <p className="mt-2 max-w-prose text-[14px] leading-relaxed text-fg/65 md:mt-0">
         {project.blurb}
       </p>

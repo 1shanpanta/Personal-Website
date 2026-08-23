@@ -3,7 +3,6 @@ export type Link = { label: string; href: string };
 export type Project = {
   name: string;
   blurb: string;
-  stack: string[];
   links: Link[];
 };
 
@@ -25,14 +24,12 @@ export const PROJECTS: Project[] = [
     name: "localshot",
     blurb:
       "Screenshot capture and annotation for macOS, drawn straight onto AppKit windows.",
-    stack: ["Swift", "AppKit"],
     links: [{ label: "code", href: "https://github.com/1shanpanta/localshot" }],
   },
   {
     name: "open-wispr",
     blurb:
       "Speech to text anywhere on macOS, transcribed on-device by a local Whisper model.",
-    stack: ["Swift", "WhisperKit"],
     links: [
       { label: "site", href: "https://open-wispr.com" },
       { label: "code", href: "https://github.com/1shanpanta/open-wispr" },
@@ -42,14 +39,12 @@ export const PROJECTS: Project[] = [
     name: "pawfit",
     blurb:
       "A fitness virtual pet. Walking is the input, and a menagerie of cats and dogs is what grows out of it.",
-    stack: ["Expo", "TypeScript"],
     links: [{ label: "site", href: "https://pawfit-web.vercel.app" }],
   },
   {
     name: "youtube-clipper",
     blurb:
       "Loops one section of a YouTube video. Paste a URL, set the start and end, and it repeats that clip until you close it.",
-    stack: ["React", "TypeScript"],
     links: [
       { label: "site", href: "https://ytlooper.vercel.app" },
       { label: "code", href: "https://github.com/1shanpanta/youtube-clipper" },
