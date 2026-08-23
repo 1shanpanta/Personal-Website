@@ -49,14 +49,12 @@ body {
   background: rgb(var(--fg));
   color: rgb(var(--void));
   line-height: 0.74;
-  padding: 0.19em 0.1em 0.03em;
+  padding: 0.19em 0.14em 0.03em;
   vertical-align: baseline;
-}
-
-/* The katakana layer crosses the name. Difference blending inverts it wherever
-   it lands on the knocked-out block, so the overlap resolves itself. */
-.overprint {
-  mix-blend-mode: difference;
+  border-radius: 0.06em;
+  /* White type butting a white block merges at the seam, but a word space left
+     a hole in the name. This sits between the two. */
+  margin-left: 0.18em;
 }
 
 @media (prefers-reduced-motion: reduce) {

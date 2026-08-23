@@ -10,9 +10,6 @@ export type Project = {
 export const GITHUB_USER = "1shanpanta";
 export const EMAIL = "ispanta03@gmail.com";
 
-/** Private repositories. The API will not count these without a token, so bump it by hand. */
-export const PRIVATE_COUNT = 64;
-
 export const HERO = {
   katakana: "イシャン・パンタ",
   first: "ISHAN",
@@ -20,17 +17,15 @@ export const HERO = {
   role: "Full-stack developer",
   company: "D&S Inc",
   place: "Kathmandu",
-  thesis:
-    "I build free, local alternatives to software you should not have to subscribe to.",
-  bio: "Days on Japanese enterprise systems. Nights on native macOS tools, a 32-bit kernel that boots to its own shell, and enough Japanese to read the ticket before I fix it.",
+  bio: "A nerd learning to build real systems, with AI in the loop on almost every commit. Japanese enterprise work by day. By night, a 32-bit kernel that boots to its own shell, native macOS tools, and whatever I wanted to exist that week.",
 };
 
 export const PROJECTS: Project[] = [
   {
     name: "open-wispr",
     blurb:
-      "Voice dictation for macOS that never leaves the machine. Speak anywhere, no account, no upload.",
-    stack: ["Swift", "on-device"],
+      "Speech to text anywhere on macOS, transcribed on-device by a local Whisper model.",
+    stack: ["Swift", "WhisperKit"],
     links: [
       { label: "site", href: "https://open-wispr.com" },
       { label: "code", href: "https://github.com/1shanpanta/open-wispr" },
@@ -39,14 +34,14 @@ export const PROJECTS: Project[] = [
   {
     name: "localshot",
     blurb:
-      "Native screenshot and annotation tool. A free alternative to CleanShot X, built on AppKit.",
+      "Screenshot capture and annotation for macOS, drawn straight onto AppKit windows.",
     stack: ["Swift", "AppKit"],
     links: [{ label: "code", href: "https://github.com/1shanpanta/localshot" }],
   },
   {
     name: "openscreen",
     blurb:
-      "Demo recorder with no subscription and no watermark. An alternative to Screen Studio, free for commercial use.",
+      "Screen recorder that turns a raw capture into a product demo, with zoom and motion applied after the take.",
     stack: ["TypeScript"],
     links: [
       { label: "site", href: "https://openscreen.vercel.app" },
@@ -56,27 +51,12 @@ export const PROJECTS: Project[] = [
   {
     name: "claude-analytics",
     blurb:
-      "Read your Claude Code sessions, tokens and cost. Fully client side, nothing leaves the browser.",
+      "Dashboard over Claude Code history: sessions, token counts, cost and the tools each run reached for.",
     stack: ["TypeScript", "Next.js"],
     links: [
       { label: "site", href: "https://claude-analytics-omega.vercel.app" },
       { label: "code", href: "https://github.com/1shanpanta/claude-analytics" },
     ],
-  },
-];
-
-export type Study = { script: string; language: string; detail: string };
-
-export const STUDYING: Study[] = [
-  {
-    script: "日本語",
-    language: "Japanese",
-    detail: "N5 passed. Sitting N2 in December.",
-  },
-  {
-    script: "Français",
-    language: "French",
-    detail: "Daily vocabulary capture, aiming at DELF.",
   },
 ];
 

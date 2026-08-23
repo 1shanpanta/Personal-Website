@@ -30,7 +30,7 @@ export default function Socials() {
             rel="noreferrer"
             aria-label={social.label}
             title={social.label}
-            className="flex h-11 w-11 items-center justify-center bg-panel text-dim transition-colors duration-200 ease-decel hover:bg-fg hover:text-void"
+            className="flex h-11 w-11 items-center justify-center rounded-md bg-panel text-dim transition-colors duration-200 ease-decel hover:bg-fg hover:text-void"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-[18px] w-[18px]">
               {PATHS[social.key]}

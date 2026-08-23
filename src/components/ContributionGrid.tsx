@@ -28,11 +28,11 @@ export default function ContributionGrid({ calendar }: { calendar: Calendar }) {
   });
 
   return (
-    <div className="overflow-x-auto bg-panel p-4 md:p-6">
+    <div className="overflow-x-auto rounded-lg bg-panel p-4 md:p-6">
       <div className="inline-block min-w-full">
         <div className="mb-2 flex gap-[3px] font-mono text-[9px] tracking-label text-dim">
           {labels.map((label, i) => (
-            <span key={i} className="w-[13px] shrink-0 whitespace-nowrap">
+            <span key={i} className="w-[11px] shrink-0 whitespace-nowrap">
               {label}
             </span>
           ))}
@@ -44,7 +44,7 @@ export default function ContributionGrid({ calendar }: { calendar: Calendar }) {
                 <div
                   key={j}
                   title={day ? `${day.count} on ${day.date}` : undefined}
-                  className="h-[13px] w-[13px] shrink-0"
+                  className="h-[11px] w-[11px] shrink-0"
                   style={{ background: day ? LEVELS[day.level] : "transparent" }}
                 />
               ))}
@@ -56,7 +56,7 @@ export default function ContributionGrid({ calendar }: { calendar: Calendar }) {
           {LEVELS.map((level) => (
             <span
               key={level}
-              className="h-[13px] w-[13px]"
+              className="h-[11px] w-[11px]"
               style={{ background: level }}
             />
           ))}
