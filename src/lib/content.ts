@@ -17,7 +17,7 @@ export const HERO = {
   role: "Full-stack developer",
   company: "D&S Inc",
   place: "Kathmandu",
-  bio: "A nerd learning to build real systems, with AI in the loop on almost every commit. Enterprise work by day. At night I build small things to find out how the big ones work.",
+  bio: "A nerd learning to build real systems, with AI in the loop on almost every commit. Enterprise work by day. I love to tinker.",
 };
 
 export const PROJECTS: Project[] = [
