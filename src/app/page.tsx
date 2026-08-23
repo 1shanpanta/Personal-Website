@@ -9,19 +9,12 @@ import {
   type Project,
 } from "@/lib/content";
 
-/** Inverted bar, not a hairline rule: the label is a lit segment on the board. */
-function Bar({ id, label, note }: { id: string; label: string; note?: string }) {
+/** One plain line carrying real figures. No label pill, no subtitle. */
+function Meta({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <div id={id} className="flex flex-wrap items-stretch gap-[3px]">
-      <h2 className="flex items-center rounded-md bg-fg px-3 pb-1 pt-1.5 font-dot text-xl leading-none text-void">
-        {label}
-      </h2>
-      {note ? (
-        <span className="flex items-center rounded-md bg-panel px-3 font-mono text-[10px] tracking-label text-dim">
-          {note}
-        </span>
-      ) : null}
-    </div>
+    <p id={id} className="mb-3 font-mono text-[10px] tracking-label text-dim">
+      {children}
+    </p>
   );
 }
 
@@ -76,7 +69,9 @@ export default async function Home() {
           <p className="font-dot text-lg text-dim md:text-2xl">
             {HERO.katakana}
           </p>
-          <h1 className="mt-1 font-dot text-[13vw] leading-[1.04] md:text-[6rem]">
+          {/* DotGothic16 sets Latin in a full-width cell, so the leading I carries a
+              wide side bearing. Pulled left in em so it holds at every size. */}
+          <h1 className="-ml-[0.2em] mt-1 font-dot text-[13vw] leading-[1.04] md:text-[6rem]">
             {HERO.first}
             <span className="knock">{HERO.last}</span>
           </h1>
@@ -95,22 +90,17 @@ export default async function Home() {
 
         {calendar ? (
           <section className="pt-14">
-            <Bar
-              id="board"
-              label="board"
-              note={`${calendar.total} CONTRIBUTIONS, LAST 12 MONTHS${
-                peak ? ` / PEAK ${peak.count} ON ${peak.date}` : ""
-              }`}
-            />
-            <div className="mt-[3px]">
-              <ContributionGrid calendar={calendar} />
-            </div>
+            <Meta id="board">
+              {calendar.total} CONTRIBUTIONS, LAST 12 MONTHS
+              {peak ? ` / PEAK ${peak.count} ON ${peak.date}` : ""}
+            </Meta>
+            <ContributionGrid calendar={calendar} />
           </section>
         ) : null}
 
         <section className="pt-14">
-          <Bar id="work" label="work" note="SELECTED" />
-          <ul className="mt-[3px] flex flex-col gap-[3px]">
+          <Meta id="work">SELECTED WORK</Meta>
+          <ul className="flex flex-col gap-[3px]">
             {PROJECTS.map((project, i) => (
               <ProjectPanel key={project.name} project={project} index={i} />
             ))}
