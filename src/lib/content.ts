@@ -29,13 +29,13 @@ export const PROJECTS: Project[] = [
     links: [{ label: "code", href: "https://github.com/1shanpanta/localshot" }],
   },
   {
-    name: "openscreen",
+    name: "open-wispr",
     blurb:
-      "Screen recorder that turns a raw capture into a product demo, with zoom and motion applied after the take.",
-    stack: ["TypeScript"],
+      "Speech to text anywhere on macOS, transcribed on-device by a local Whisper model.",
+    stack: ["Swift", "WhisperKit"],
     links: [
-      { label: "site", href: "https://openscreen.vercel.app" },
-      { label: "code", href: "https://github.com/1shanpanta/openscreen" },
+      { label: "site", href: "https://open-wispr.com" },
+      { label: "code", href: "https://github.com/1shanpanta/open-wispr" },
     ],
   },
   {
