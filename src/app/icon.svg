@@ -1,15 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#08090a" />
-  <g fill="#ff2b4a">
-    <rect x="5" y="6" width="4" height="4" />
-    <rect x="5" y="12" width="4" height="4" />
-    <rect x="5" y="18" width="4" height="4" />
-    <rect x="5" y="24" width="4" height="4" />
-    <rect x="12" y="6" width="4" height="4" />
-    <rect x="19" y="6" width="4" height="4" />
-    <rect x="19" y="12" width="4" height="4" />
-    <rect x="19" y="18" width="4" height="4" />
-    <rect x="19" y="24" width="4" height="4" />
-    <rect x="12" y="15" width="4" height="4" />
+  <rect width="32" height="32" fill="#060606" />
+  <g>
+    <rect x="2" y="2" width="8" height="8" fill="#404040" />
+    <rect x="12" y="2" width="8" height="8" fill="#707070" />
+    <rect x="22" y="2" width="8" height="8" fill="#404040" />
+    <rect x="2" y="12" width="8" height="8" fill="#707070" />
+    <rect x="12" y="12" width="8" height="8" fill="#f2f2f2" />
+    <rect x="22" y="12" width="8" height="8" fill="#a8a8a8" />
+    <rect x="2" y="22" width="8" height="8" fill="#404040" />
+    <rect x="12" y="22" width="8" height="8" fill="#a8a8a8" />
+    <rect x="22" y="22" width="8" height="8" fill="#707070" />
   </g>
 </svg>
