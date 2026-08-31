@@ -21,25 +21,22 @@ export const HERO = {
 
 export const PROJECTS: Project[] = [
   {
-    name: "localshot",
-    blurb:
-      "Screenshot capture and annotation for macOS, drawn straight onto AppKit windows.",
-    links: [{ label: "code", href: "https://github.com/1shanpanta/localshot" }],
-  },
-  {
-    name: "open-wispr",
-    blurb:
-      "Speech to text anywhere on macOS, transcribed on-device by a local Whisper model.",
-    links: [
-      { label: "site", href: "https://open-wispr.com" },
-      { label: "code", href: "https://github.com/1shanpanta/open-wispr" },
-    ],
-  },
-  {
     name: "pawfit",
     blurb:
       "A fitness virtual pet. Walking is the input, and a menagerie of cats and dogs is what grows out of it.",
     links: [{ label: "site", href: "https://pawfit-web.vercel.app" }],
+  },
+  {
+    name: "wono.fi",
+    blurb:
+      "Tap to pay in crypto over NFC. Two phones touch, one pays, and the transfer settles privately on Solana.",
+    links: [{ label: "site", href: "https://wono.fi" }],
+  },
+  {
+    name: "kesshin",
+    blurb:
+      "Stake money with friends on a daily habit. Check in with a photo, and the day you miss is the day they split your penalty.",
+    links: [{ label: "site", href: "https://kesshin.vercel.app" }],
   },
   {
     name: "youtube-clipper",
@@ -48,6 +45,21 @@ export const PROJECTS: Project[] = [
     links: [
       { label: "site", href: "https://ytlooper.vercel.app" },
       { label: "code", href: "https://github.com/1shanpanta/youtube-clipper" },
+    ],
+  },
+  {
+    name: "localshot",
+    blurb:
+      "Screenshot capture and annotation for macOS, drawn straight onto AppKit windows.",
+    links: [{ label: "code", href: "https://github.com/1shanpanta/localshot" }],
+  },
+  {
+    name: "todoapp",
+    blurb:
+      "A local-first todo app. Everything lives in the browser through localStorage, so there is no account and no server.",
+    links: [
+      { label: "site", href: "https://todoapp-mocha.vercel.app" },
+      { label: "code", href: "https://github.com/1shanpanta/todoapp" },
     ],
   },
 ];
