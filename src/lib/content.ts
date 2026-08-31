@@ -47,21 +47,6 @@ export const PROJECTS: Project[] = [
       { label: "code", href: "https://github.com/1shanpanta/youtube-clipper" },
     ],
   },
-  {
-    name: "localshot",
-    blurb:
-      "Screenshot capture and annotation for macOS, drawn straight onto AppKit windows.",
-    links: [{ label: "code", href: "https://github.com/1shanpanta/localshot" }],
-  },
-  {
-    name: "todoapp",
-    blurb:
-      "A local-first todo app. Everything lives in the browser through localStorage, so there is no account and no server.",
-    links: [
-      { label: "site", href: "https://todoapp-mocha.vercel.app" },
-      { label: "code", href: "https://github.com/1shanpanta/todoapp" },
-    ],
-  },
 ];
 
 export type SocialKey = "github" | "linkedin" | "x" | "medium" | "email";
