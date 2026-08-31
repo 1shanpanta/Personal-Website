@@ -11,6 +11,13 @@ cached for almost every visitor and the numbers can trail reality by a few days.
 If GitHub ever changes that markup the parse returns `null` and the section is
 dropped rather than shown empty.
 
+## Projects on the page
+
+- [pawfit](https://pawfit-web.vercel.app) - fitness virtual pet, walking is the input
+- [wono.fi](https://wono.fi) - tap to pay in crypto over NFC, settled on Solana
+- [kesshin](https://kesshin.vercel.app) - stake money with friends on a daily habit
+- [youtube-clipper](https://ytlooper.vercel.app) - loops one section of a YouTube video
+
 ```bash
 bun install
 bun run dev     # http://localhost:3000
