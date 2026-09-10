@@ -1,7 +1,6 @@
 # Ishan Panta
 
-My personal site. One page, 87 kB of JavaScript, none of it mine.
-
+My personal site. 
 Live: <https://ishanpanta.vercel.app>
 
 ## Run it
