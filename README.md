@@ -1,7 +1,7 @@
 # Ishan Panta
 
 My personal site. 
-Live: <https://ishanpanta.vercel.app>
+Live: <https://ishanpanta.com.np>
 
 ## Run it
 

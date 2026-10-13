@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ishan Panta",
     description: DESCRIPTION,
-    url: "https://ishanpanta.vercel.app",
+    url: "https://ishanpanta.com.np",
     type: "website",
   },
 };
