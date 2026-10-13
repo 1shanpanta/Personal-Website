@@ -1,0 +1,9 @@
+{
+  "name": "ishanpanta",
+  "compatibility_date": "2026-10-13",
+  "assets": { "directory": "./out" },
+  "routes": [
+    { "pattern": "ishanpanta.com.np", "custom_domain": true },
+    { "pattern": "www.ishanpanta.com.np", "custom_domain": true }
+  ]
+}
