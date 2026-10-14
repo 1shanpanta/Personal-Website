@@ -292,9 +292,6 @@ export default function Backdrop() {
     const onLeave = () => (mouse.seen = false);
     document.documentElement.addEventListener("mouseleave", onLeave);
 
-    const title = document.title;
-    const onVis = () => (document.title = document.hidden ? "[ signal lost ]" : title);
-    document.addEventListener("visibilitychange", onVis);
 
     const pts: Point[] = [];
     let warp = 0;
@@ -510,7 +507,6 @@ export default function Backdrop() {
       clearTimeout(warm);
       removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("mouseleave", onLeave);
-      document.removeEventListener("visibilitychange", onVis);
     };
   }, []);
 
