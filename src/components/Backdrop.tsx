@@ -11,10 +11,9 @@ void main(){v=position*.5+.5;gl_Position=vec4(position,0.,1.);}`;
 const FRAG = `#version 300 es
 precision highp float;
 in vec2 v;out vec4 o;
-uniform sampler2D u_a,u_b,u_pa,u_pb,u_ink;
-// Ink bloom per shot: xy pan, z growth zoom, w strength.
-uniform vec4 u_inkA,u_inkB;
-uniform float u_inkAsp;
+uniform sampler2D u_a,u_b,u_pa,u_pb;
+// Red bloom per shot: xy centre, z radius, w strength.
+uniform vec4 u_redA,u_redB;
 uniform vec2 u_res,u_mouse,u_aspA,u_aspB;
 uniform vec3 u_colA,u_colB;
 // Per shot: x haze, y zoom, z melt, w ghost strength.
@@ -40,7 +39,7 @@ vec2 frame(vec2 uv,float ia,float zoom,vec2 pan){
 
 // mv: xy pan (drift and jitter), z exposure, w focus pull, all per shot.
 // neg runs the plate as its negative: the reel's polarity cut.
-vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 ink,vec3 tint,float blur,float neg,float wash){
+vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 red,vec3 tint,float blur,float neg,float wash){
   // The plate morphs: noise displacement fast enough that shapes visibly
   // flow and reshape inside a one-second shot, as on the reel.
   vec2 w=(vec2(fbm(uv*2.4+vec2(0.,u_time*.32)),fbm(uv*2.4+vec2(5.2,1.3-u_time*.27)))-.5)*shot.z;
@@ -66,13 +65,13 @@ vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 ink,v
   // A second plate ghosts through, drifting against the first (lighten blend).
   if(shot.w>0.)col=max(col,vec3(grade(lum(texture(p,frame(uv*.94+.03-w*2.,asp.y,shot.y*1.1,-mv.xy)).rgb),0.)*shot.w));
   col*=tint*mv.z;
-  // Crimson ink blooms on about a third of shots. The ink plate's redness,
-  // read soft from a mip level, is the mask: a red cloud, not sharp tendrils.
-  // It grows over the shot, flows with the plate's morph, and carries the
-  // plate's brightness so detail survives, topping out at crimson, not pink.
-  if(ink.w>0.){
-    vec3 k=texture(u_ink,frame(uv+w*1.5,u_inkAsp,ink.z,ink.xy),2.5).rgb;
-    col=mix(col,vec3(.78,.02,.05)*(.25+.85*lum(col)),smoothstep(.04,.22,k.r-max(k.g,k.b))*ink.w);
+  // A crimson cloud on about a quarter of shots, as on the reel: one soft
+  // blob with a ragged edge that grows while the shot holds. It keeps the
+  // plate's brightness, so detail shows through the red.
+  if(red.w>0.){
+    vec2 q=(v-red.xy)*vec2(u_res.x/u_res.y,1.);
+    float d=length(q)*(1.+(fbm(q/red.z*1.2+w*8.)-.5)*.7);
+    col=mix(col,vec3(.74,.01,.04)*(.45+.55*lum(col)),(1.-smoothstep(red.z*.35,red.z*1.15,d))*red.w);
   }
   return col;
 }
@@ -84,8 +83,8 @@ void main(){
   float wr=.15*min(asp.x,1.),f=exp(-dot(mp,mp)/(wr*wr))*u_warp,s=sin(f*.9),k=cos(f*.9);
   vec2 uv=u_mouse+mat2(k,-s,s,k)*mp*(1.-.35*f)/asp;
 
-  vec3 a=plate(u_a,u_pa,uv,u_aspA,u_shotA,u_moveA,u_inkA,u_colA,u_blur,0.,u_wash.x);
-  vec3 b=plate(u_b,u_pb,uv,u_aspB,u_shotB,u_moveB,u_inkB,u_colB,0.,u_flip,u_wash.y);
+  vec3 a=plate(u_a,u_pa,uv,u_aspA,u_shotA,u_moveA,u_redA,u_colA,u_blur,0.,u_wash.x);
+  vec3 b=plate(u_b,u_pb,uv,u_aspB,u_shotB,u_moveB,u_redB,u_colB,0.,u_flip,u_wash.y);
   vec3 c=mix(a,b,u_mix);
   c=mix(c,1.-(1.-a)*(1.-b),u_add);
   c*=mix(vec3(1.),vec3(1.,.5,.42),u_tint);
@@ -183,7 +182,7 @@ type Shot = {
   exposure: number;
   focus: [number, number];
   bloom: number;
-  inkPan: [number, number];
+  bloomAt: [number, number];
   wash: number;
   burn: [number, number, number] | null;
 };
@@ -199,8 +198,8 @@ const makeShot = (scene: SceneId, start: number, len: number): Shot => {
     partner: pick(CYCLE.filter((s) => s !== scene)),
     start,
     len,
-    haze: Math.random() < 0.4 ? rand(0.05, 0.15) : rand(0.35, 0.6),
-    melt: rand(0.03, 0.09),
+    haze: Math.random() < 0.65 ? rand(0, 0.08) : rand(0.25, 0.45),
+    melt: rand(0.012, 0.035),
     ghost: Math.random() < 0.5 ? rand(0.3, 0.6) : 0,
     tint: pick(TINTS),
     zoomRate: Math.random() < 0.25 ? rand(-0.025, -0.005) : rand(0.003, 0.035),
@@ -208,8 +207,8 @@ const makeShot = (scene: SceneId, start: number, len: number): Shot => {
     jitter: Math.random() < 0.7 ? 0.0001 : rand(0.0005, 0.0015),
     exposure: rand(0.8, 1.3),
     focus: pick(FOCUS),
-    bloom: Math.random() < 0.33 ? rand(0.85, 1) : 0,
-    inkPan: [rand(-0.15, 0.15), rand(-0.15, 0.15)],
+    bloom: Math.random() < 0.25 ? rand(0.85, 1) : 0,
+    bloomAt: [rand(0.35, 0.65), rand(0.62, 0.82)],
     wash: Math.random() < 0.45 ? rand(0.4, 0.85) : 0,
     burn: Math.random() < 0.3 ? [rand(0.25, 0.75), rand(0.66, 0.9), rand(0.06, 0.12)] : null,
   };
@@ -245,6 +244,8 @@ export default function Backdrop() {
 
     const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const finePointer = matchMedia("(pointer: fine)").matches;
+    // The canvas cannot read a CSS variable, so it takes the page's resolved typeface.
+    const face = getComputedStyle(document.body).fontFamily;
     const suffix = innerWidth < innerHeight ? "-p" : "";
 
     const plates = new Map<SceneId, Plate | null>();
@@ -263,16 +264,6 @@ export default function Backdrop() {
       );
     };
     const ready = (id: SceneId) => plates.get(id) ?? null;
-
-    let ink: { tex: WebGLTexture; aspect: number } | null = null;
-    const inkTex = twgl.createTexture(
-      gl,
-      { src: "/scenes/ink.webp", flipY: 1, wrap: gl.CLAMP_TO_EDGE, min: gl.LINEAR_MIPMAP_LINEAR },
-      (err, _t, src) => {
-        const img = src as HTMLImageElement;
-        if (!err) ink = { tex: inkTex, aspect: img.naturalWidth / img.naturalHeight };
-      },
-    );
 
     // The first shot runs 2.4 s longer, to cover the boot screen.
     let cur = makeShot(CYCLE[0], 0, 2.4 + SHOTS[0]);
@@ -368,10 +359,10 @@ export default function Backdrop() {
         ghost ? s.ghost : 0,
       ];
       const camB = move(cur);
-      // The bloom spreads as the shot holds: the ink zooms up while it gains strength.
+      // The red cloud spreads and deepens as the shot holds.
       const bloom = (s: Shot) => {
         const p = progress(s);
-        return [s.inkPan[0], s.inkPan[1], 0.8 + 0.9 * p, ink ? s.bloom * (0.25 + 0.75 * p) : 0];
+        return [s.bloomAt[0], s.bloomAt[1], 0.12 + 0.18 * p, s.bloom * (0.3 + 0.7 * p)];
       };
       // Phone: the type climbs high, so the shade reaches up and the burn shrinks.
       const wide = W >= H;
@@ -400,10 +391,8 @@ export default function Backdrop() {
         u_shade: wide ? 0.6 : 0.86,
         u_colA: shotA.tint,
         u_colB: cur.tint,
-        u_ink: ink?.tex ?? b.tex,
-        u_inkAsp: ink?.aspect ?? 1,
-        u_inkA: bloom(shotA),
-        u_inkB: bloom(cur),
+        u_redA: bloom(shotA),
+        u_redB: bloom(cur),
         u_shotA: look(shotA, pa),
         u_shotB: look(cur, pb),
         u_mix: !prev ? 0 : cut === "settle" ? 1 - 0.5 ** (tau / FRAME + 1) : 1,
@@ -471,7 +460,7 @@ export default function Backdrop() {
       // Labels without markers, small and dim; every other point carries a
       // second reading just below it, as the reel's tracker doubles up.
       ctx.fillStyle = "rgba(222,216,198,0.62)";
-      ctx.font = `9px "Helvetica Neue", Arial, sans-serif`;
+      ctx.font = `9px ${face}`;
       const label = (x: number, y: number, at: Point) =>
         ctx.fillText(`${x.toFixed(2)} / ${y.toFixed(2)}`, at.x, at.y);
       pts.forEach((q, i) => {
@@ -496,7 +485,7 @@ export default function Backdrop() {
         ctx.strokeStyle = "rgba(255,255,255,0.85)";
         ctx.strokeRect(mouse.x - 11, mouse.y - 11, 22, 22);
         ctx.fillStyle = "rgba(255,255,255,0.74)";
-        ctx.font = `10px "Helvetica Neue", Arial, sans-serif`;
+        ctx.font = `10px ${face}`;
         ctx.fillText(`${mouse.x.toFixed(2)} / ${mouse.y.toFixed(2)}`, mouse.x + 16, mouse.y + 24);
       }
     };
