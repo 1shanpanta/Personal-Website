@@ -483,6 +483,25 @@ export default function Backdrop() {
         label(jx, jy, { x: q.x + 4, y: q.y - 3 });
         if (i % 2) label(jx - 5.2, jy - 12.9, { x: q.x - 2, y: q.y + 8 });
       });
+      // The cursor gets its own box, reading and wires to the three nearest points.
+      if (finePointer && mouse.seen) {
+        ctx.lineWidth = 0.75;
+        ctx.strokeStyle = "rgba(255,255,255,0.32)";
+        ctx.beginPath();
+        [...pts]
+          .sort((m, n) => Math.hypot(m.x - mouse.x, m.y - mouse.y) - Math.hypot(n.x - mouse.x, n.y - mouse.y))
+          .slice(0, 3)
+          .forEach((q) => {
+            ctx.moveTo(mouse.x, mouse.y);
+            ctx.lineTo(q.x, q.y);
+          });
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,0.85)";
+        ctx.strokeRect(mouse.x - 11, mouse.y - 11, 22, 22);
+        ctx.fillStyle = "rgba(255,255,255,0.74)";
+        ctx.font = `10px "Helvetica Neue", Arial, sans-serif`;
+        ctx.fillText(`${mouse.x.toFixed(2)} / ${mouse.y.toFixed(2)}`, mouse.x + 16, mouse.y + 24);
+      }
     };
 
     raf = requestAnimationFrame(loop);
