@@ -141,11 +141,6 @@ export default function Backdrop() {
         ghost ? s.ghost : 0,
       ];
       const camB = move(cur);
-      // The red cloud spreads and deepens as the shot holds.
-      const bloom = (s: Shot) => {
-        const p = progress(s);
-        return [s.bloomAt[0], s.bloomAt[1], 0.12 + 0.18 * p, s.bloom * (0.3 + 0.7 * p)];
-      };
       // Phone: the type climbs high, so the shade reaches up and the burn shrinks.
       const wide = W >= H;
       const burn = cur.burn;
@@ -170,16 +165,11 @@ export default function Backdrop() {
         u_wash: [shotA.wash, cur.wash],
         u_warp: warp,
         u_shade: wide ? 0.6 : 0.86,
-        u_colA: shotA.tint,
-        u_colB: cur.tint,
-        u_redA: bloom(shotA),
-        u_redB: bloom(cur),
         u_shotA: look(shotA, pa),
         u_shotB: look(cur, pb),
         u_mix: !prev ? 0 : cut === "settle" ? 1 - 0.5 ** (tau / FRAME + 1) : 1,
         u_add: prev && cut === "double" && tau < 2 * FRAME ? 1 : 0,
         u_flip: cut === "flip" && tau < FLIP ? 1 : 0,
-        u_tint: cut === "flip" && tau >= FLIP && tau < FLIP + FRAME ? 1 : 0,
         u_blur: !prev && nextCut === "defocus" ? Math.max(0, 1 - (cutAt - t) / DEFOCUS) : 0,
         u_time: t,
       });
@@ -212,7 +202,7 @@ export default function Backdrop() {
       ctx.clearRect(0, 0, W, H);
       // Labels without markers, small and dim; every other point carries a
       // second reading just below it, as the reel's tracker doubles up.
-      ctx.fillStyle = "rgba(222,216,198,0.62)";
+      ctx.fillStyle = "rgba(220,220,220,0.62)";
       ctx.font = `9px ${face}`;
       const label = (x: number, y: number, at: Point) =>
         ctx.fillText(`${x.toFixed(2)} / ${y.toFixed(2)}`, at.x, at.y);

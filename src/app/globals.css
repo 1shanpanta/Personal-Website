@@ -2,11 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* No surfaces exist on this page: type sits on the photograph. */
+/* No surfaces exist on this page: type sits on the photograph. Black and white only. */
 :root {
-  --night: 20 19 18;
-  --bone: 244 242 236;
-  --crimson: 176 16 26;
+  --night: 20 20 20;
+  --bone: 242 242 242;
 }
 
 /* One viewport, no page scroll: the backdrop changes in place. */
@@ -29,8 +28,8 @@ body {
 }
 
 ::selection {
-  background: rgb(var(--crimson));
-  color: rgb(var(--bone));
+  background: rgb(var(--bone));
+  color: rgb(var(--night));
 }
 
 :focus-visible {

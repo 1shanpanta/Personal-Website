@@ -7,8 +7,7 @@ export const FLIP = 0.5;
 /**
  * The ways the reel moves between shots, measured frame by frame. Most cuts
  * settle: the difference to the new shot halves each frame for about four. A
- * flip opens the shot as its own negative for a beat, then turns positive
- * through one tinted frame, as the red rose turns white at 4.9 s.
+ * flip opens the shot as its own negative for a beat, then turns positive.
  */
 export type Cut = "hard" | "settle" | "double" | "flip" | "defocus";
 export const pickCut = (len: number): Cut => {
@@ -34,19 +33,15 @@ export type Shot = {
   haze: number;
   melt: number;
   ghost: number;
-  tint: number[];
   zoomRate: number;
   drift: [number, number];
   jitter: number;
   exposure: number;
   focus: [number, number];
-  bloom: number;
-  bloomAt: [number, number];
   wash: number;
   burn: [number, number, number] | null;
 };
 
-const TINTS = [[1, 1, 1], [1, 1, 1], [1, 1, 1], [0.86, 0.97, 1], [1.06, 0.96, 0.82]];
 const FOCUS: [number, number][] = [[0.6, 0], [0.6, 0], [0, 0.5], [0, 0], [0, 0], [0, 0]];
 const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
 const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
@@ -62,14 +57,11 @@ export const makeShot = (scene: SceneId, start: number, len: number): Shot => {
     haze: Math.random() < 0.65 ? rand(0, 0.08) : rand(0.25, 0.45),
     melt: rand(0.012, 0.035),
     ghost: Math.random() < 0.5 ? rand(0.3, 0.6) : 0,
-    tint: pick(TINTS),
     zoomRate: Math.random() < 0.25 ? rand(-0.025, -0.005) : rand(0.003, 0.035),
     drift: [Math.cos(angle) * speed, Math.sin(angle) * speed],
     jitter: Math.random() < 0.7 ? 0.0001 : rand(0.0005, 0.0015),
     exposure: rand(0.8, 1.3),
     focus: pick(FOCUS),
-    bloom: Math.random() < 0.25 ? rand(0.85, 1) : 0,
-    bloomAt: [rand(0.35, 0.65), rand(0.62, 0.82)],
     wash: Math.random() < 0.45 ? rand(0.4, 0.85) : 0,
     burn: Math.random() < 0.3 ? [rand(0.25, 0.75), rand(0.66, 0.9), rand(0.06, 0.12)] : null,
   };
