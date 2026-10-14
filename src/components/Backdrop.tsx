@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as twgl from "twgl.js";
 import { CUT_EVENT, CYCLE, SHOTS, type SceneId } from "@/lib/scenes";
 import { findPeaks, type Point } from "./backdrop/peaks";
@@ -16,6 +16,8 @@ type Plate = { tex: WebGLTexture; aspect: number; peaks: Point[] };
 export default function Backdrop() {
   const glRef = useRef<HTMLCanvasElement>(null);
   const hudRef = useRef<HTMLCanvasElement>(null);
+  // Bumped when the GPU gives the context back, to rebuild every GL resource.
+  const [gen, setGen] = useState(0);
 
   useEffect(() => {
     const canvas = glRef.current;
@@ -248,14 +250,26 @@ export default function Backdrop() {
       }
     };
 
+    // A lost context (phone backgrounded, driver reset) stops drawing; without
+    // preventDefault the browser never restores it.
+    const onLost = (e: Event) => {
+      e.preventDefault();
+      cancelAnimationFrame(raf);
+    };
+    const onRestored = () => setGen((g) => g + 1);
+    canvas.addEventListener("webglcontextlost", onLost);
+    canvas.addEventListener("webglcontextrestored", onRestored);
+
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(warm);
       removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("mouseleave", onLeave);
+      canvas.removeEventListener("webglcontextlost", onLost);
+      canvas.removeEventListener("webglcontextrestored", onRestored);
     };
-  }, []);
+  }, [gen]);
 
   // Two fixed layers: the HUD sits above the page and blends against it, which
   // a shared fixed parent would prevent.
