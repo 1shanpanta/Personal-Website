@@ -56,7 +56,7 @@ export const makeShot = (scene: SceneId, start: number, len: number): Shot => {
     len,
     haze: Math.random() < 0.65 ? rand(0, 0.08) : rand(0.25, 0.45),
     melt: rand(0.012, 0.035),
-    ghost: Math.random() < 0.5 ? rand(0.3, 0.6) : 0,
+    ghost: Math.random() < 0.3 ? rand(0.2, 0.4) : 0,
     zoomRate: Math.random() < 0.25 ? rand(-0.025, -0.005) : rand(0.003, 0.035),
     drift: [Math.cos(angle) * speed, Math.sin(angle) * speed],
     jitter: Math.random() < 0.7 ? 0.0001 : rand(0.0005, 0.0015),

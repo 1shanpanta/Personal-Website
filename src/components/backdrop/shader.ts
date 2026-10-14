@@ -20,7 +20,7 @@ float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
 float fbm(vec2 p){float s=0.,a=.5;for(int i=0;i<4;i++){s+=a*noise(p);p*=2.03;a*=.5;}return s;}
 float lum(vec3 c){return dot(c,vec3(.299,.587,.114));}
 // Crush the mids so fog reads as black ground and the subject glows.
-float grade(float g,float neg){return pow(smoothstep(.06,1.,mix(g,1.-g,neg)),1.35);}
+float grade(float g,float neg){return pow(smoothstep(.08,.95,mix(g,1.-g,neg)),1.5);}
 
 vec2 frame(vec2 uv,float ia,float zoom,vec2 pan){
   vec2 p=uv-.5;float va=u_res.x/u_res.y;
