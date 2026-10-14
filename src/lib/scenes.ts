@@ -1,9 +1,23 @@
 /**
- * The backdrop's shots, in the order it cuts through them: mostly rose, with
- * the knight and the owl between. Images live in public/scenes as <id>.webp
- * (landscape) and <id>-p.webp (portrait).
+ * The backdrop's shots, in the reel's own order. Images live in public/scenes
+ * as <id>.webp (landscape) and <id>-p.webp (portrait).
  */
-export const CYCLE = ["rose", "knight", "rose2", "owl", "rose3", "knight2", "rose4"] as const;
+export const CYCLE = [
+  "cave",
+  "siren",
+  "tree",
+  "dune",
+  "palerose",
+  "rose",
+  "ruins",
+  "iceberg",
+  "armour",
+  "tower",
+  "pines",
+  "knight",
+  "owl",
+  "blossom",
+] as const;
 
 export type SceneId = (typeof CYCLE)[number];
 
