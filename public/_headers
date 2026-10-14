@@ -1,0 +1,10 @@
+# Hashed build files never change, so browsers keep them for a year.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Plates and the score keep their names when they change, so they get one day, then revalidate in the background.
+/scenes/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/audio/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
