@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CUT_EVENT } from "@/lib/scenes";
 import { HERO, PROJECTS } from "@/lib/content";
 
@@ -81,7 +81,7 @@ function Column({ text, side }: { text: string; side: "left" | "right" }) {
  * behind, and each backdrop cut swaps in the next section.
  */
 export default function Codex({ total }: { total: string }) {
-  const parts = sections(total).map((lines) => lines.join("\n"));
+  const parts = useMemo(() => sections(total).map((lines) => lines.join("\n")), [total]);
   const [{ section, typed }, setState] = useState({ section: 0, typed: 0 });
 
   useEffect(() => {
@@ -90,13 +90,16 @@ export default function Codex({ total }: { total: string }) {
       setState((s) => ({ section: (s.section + 1) % parts.length, typed: still ? Infinity : 0 }));
     addEventListener(CUT_EVENT, next);
     const step = 3;
-    const typing = still ? 0 : window.setInterval(() => setState((s) => ({ ...s, typed: s.typed + step })), 1000 / (TYPE_RATE / step));
+    // Returning the same state once both copies finish stops the re-renders until the next cut.
+    const type = () =>
+      setState((s) => (s.typed >= parts[s.section].length + LAG ? s : { ...s, typed: s.typed + step }));
+    const typing = still ? 0 : window.setInterval(type, 1000 / (TYPE_RATE / step));
     if (still) setState((s) => ({ ...s, typed: Infinity }));
     return () => {
       removeEventListener(CUT_EVENT, next);
       clearInterval(typing);
     };
-  }, [parts.length]);
+  }, [parts]);
 
   const text = parts[section];
   return (
