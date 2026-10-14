@@ -200,6 +200,21 @@ export default function Backdrop() {
       pts.length = targets.length;
 
       ctx.clearRect(0, 0, W, H);
+      // A steady web: every point wired to its two nearest neighbours.
+      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = "rgba(255,255,255,0.42)";
+      ctx.beginPath();
+      pts.forEach((q) =>
+        pts
+          .filter((n) => n !== q)
+          .sort((m, n) => Math.hypot(m.x - q.x, m.y - q.y) - Math.hypot(n.x - q.x, n.y - q.y))
+          .slice(0, 2)
+          .forEach((n) => {
+            ctx.moveTo(q.x, q.y);
+            ctx.lineTo(n.x, n.y);
+          }),
+      );
+      ctx.stroke();
       // Labels without markers, small and dim; every other point carries a
       // second reading just below it, as the reel's tracker doubles up.
       ctx.fillStyle = "rgba(220,220,220,0.62)";
