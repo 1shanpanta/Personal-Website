@@ -8,11 +8,10 @@ const ICONS: Record<SocialKey, IconType> = {
   x: FaXTwitter,
 };
 
-/** Bare glyphs on the photograph: no tiles, one size, one opacity. */
+/** Glyphs set at the role line's size (1em), on a 28px hit area. */
 export default function Socials() {
   return (
-    // Pulled left by the glyph inset, so the first icon lines up with the text above.
-    <ul className="-ml-[11px] flex gap-1">
+    <ul className="-my-2 flex gap-0.5">
       {SOCIALS.map(({ key, label, href }) => {
         const Icon = ICONS[key];
         return (
@@ -23,9 +22,9 @@ export default function Socials() {
               rel="noreferrer"
               aria-label={label}
               title={label}
-              className="flex h-10 w-10 items-center justify-center opacity-75 transition-opacity duration-150 ease-decel hover:opacity-100"
+              className="flex h-7 w-7 items-center justify-center opacity-80 transition-opacity duration-150 ease-decel hover:opacity-100"
             >
-              <Icon aria-hidden className="h-[17px] w-[17px] drop-shadow-[0_0_6px_rgb(0_0_0/0.55)]" />
+              <Icon aria-hidden className="h-[1em] w-[1em]" />
             </a>
           </li>
         );

@@ -34,15 +34,13 @@ export default async function Home() {
               <br />
               <Decode text={HERO.last} delay={180} />
             </h1>
-            <p className="mt-5 text-[11px] uppercase tracking-label opacity-80">{HERO.role}</p>
-          </div>
-
-          <div>
-            <p className="text-[15px] leading-relaxed">{HERO.bio}</p>
-            <div className="mt-4">
+            <div className="mt-5 flex items-center gap-4 text-[11px]">
+              <p className="uppercase tracking-label opacity-80">{HERO.role}</p>
               <Socials />
             </div>
           </div>
+
+          <p className="text-[15px] leading-relaxed">{HERO.bio}</p>
         </div>
       </main>
     </>
