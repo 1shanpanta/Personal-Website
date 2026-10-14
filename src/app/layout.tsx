@@ -8,7 +8,8 @@ const ui = Inter({ subsets: ["latin"], variable: "--font-ui" });
 const DESCRIPTION =
   "Full-stack developer in Kathmandu. I build free, local alternatives to software you should not have to subscribe to.";
 
-const IMAGE = { url: "/og.png", width: 1200, height: 630, alt: "Ishan Panta, full-stack developer" };
+// Bump ?v when og.png changes: link previews cache the image by its URL.
+const IMAGE = { url: "/og.png?v=2", width: 1200, height: 630, alt: "Ishan Panta, full-stack developer" };
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ishanpanta.com.np"),
