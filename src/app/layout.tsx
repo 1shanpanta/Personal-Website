@@ -8,14 +8,25 @@ const ui = Inter({ subsets: ["latin"], variable: "--font-ui" });
 const DESCRIPTION =
   "Full-stack developer in Kathmandu. I build free, local alternatives to software you should not have to subscribe to.";
 
+const IMAGE = { url: "/og.png", width: 1200, height: 630, alt: "Ishan Panta, full-stack developer" };
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ishanpanta.com.np"),
   title: "Ishan Panta",
   description: DESCRIPTION,
   openGraph: {
     title: "Ishan Panta",
     description: DESCRIPTION,
-    url: "https://ishanpanta.com.np",
+    url: "/",
     type: "website",
+    images: [IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ishan Panta",
+    description: DESCRIPTION,
+    creator: "@1shanpanta",
+    images: [IMAGE],
   },
 };
 
