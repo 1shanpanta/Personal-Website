@@ -78,10 +78,15 @@ void main(){
   c+=smoothstep(.5,.95,fbm(v*vec2(2.2,3.)+u_time*vec2(.025,.012)))*.05*(.3+c);
   float m=length(mp);
   c+=exp(-m*m*9.)*.05;
+  // Dark shots fall off at the corners; haze shots glow white there instead, as on the reel.
   vec2 q=v-.5;
-  c*=1.-dot(q,q)*1.5;
-  // Below u_shade the frame sinks toward black, so the type always stands on dark.
-  c*=mix(.22,1.,smoothstep(.04,u_shade,v.y));
+  float e=dot(q,q),haze=mix(u_wash.x,u_wash.y,u_mix);
+  c=mix(c*(1.-e*1.5),1.-(1.-c)*(1.-smoothstep(.08,.45,e)*.8),haze);
+  // Below u_shade the frame sinks toward grey mist, dark enough that the type
+  // always reads; the mist drifts, thickest between the two text columns.
+  float low=1.-smoothstep(.04,u_shade,v.y);
+  c*=mix(1.,.3,low);
+  c+=low*smoothstep(.45,.85,fbm(v*vec2(3.,6.)+u_time*vec2(.03,.01)))*.1*(1.-abs(v.x-.55)*1.6);
   c+=(hash(v*u_res+fract(u_time)*91.)-.5)*.025;
   o=vec4(c,1.);
 }`;
