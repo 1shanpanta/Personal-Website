@@ -11,6 +11,7 @@ export const CYCLE = [
   "rose",
   "ruins",
   "iceberg",
+  "mist",
   "armour",
   "tower",
   "pines",
