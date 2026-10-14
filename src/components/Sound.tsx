@@ -29,6 +29,8 @@ const writeMuted = (muted: boolean) => {
  */
 export default function Sound() {
   const [on, setOn] = useState(true);
+  // The icon follows real playback: before the first gesture the browser keeps it silent.
+  const [playing, setPlaying] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
   const ramp = useRef(0);
   const disarm = useRef(() => {});
@@ -55,6 +57,8 @@ export default function Sound() {
     a.loop = true;
     a.volume = 0;
     audio.current = a;
+    a.addEventListener("playing", () => setPlaying(true));
+    a.addEventListener("pause", () => setPlaying(false));
 
     // A blocked play() rejects later; `alive` stops a torn-down mount from
     // arming listeners nothing would ever remove.
@@ -107,15 +111,15 @@ export default function Sound() {
     setOn(!muting);
   };
 
-  const Icon = on ? FaVolumeHigh : FaVolumeXmark;
+  const Icon = playing ? FaVolumeHigh : FaVolumeXmark;
   return (
     <button
       type="button"
       data-sound
       onClick={toggle}
-      aria-pressed={on}
-      aria-label={on ? "Mute the score" : "Play the score"}
-      title={on ? "Mute" : "Sound"}
+      aria-pressed={playing}
+      aria-label={playing ? "Mute the score" : "Play the score"}
+      title={playing ? "Mute" : "Sound"}
       className="overlay fixed right-3 top-3 z-30 flex h-10 w-10 items-center justify-center opacity-70 transition-opacity duration-150 ease-decel hover:opacity-100 md:right-7 md:top-6"
     >
       <Icon aria-hidden className="h-4 w-4 drop-shadow-[0_0_6px_rgb(0_0_0/0.55)]" />
