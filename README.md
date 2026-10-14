@@ -11,6 +11,8 @@ bun run dev     # http://localhost:3000
 bun run build
 ```
 
+A push to `main` deploys the site to Cloudflare through `.github/workflows/deploy.yml`.
+
 ## Stack
 
 - Next.js 14, app router, static export
