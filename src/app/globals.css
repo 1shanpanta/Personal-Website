@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* No surfaces exist on this page: type sits on the photograph. Crimson appears
-   only in text selection. */
+/* No surfaces exist on this page: type sits on the photograph. */
 :root {
   --night: 20 19 18;
   --bone: 244 242 236;
@@ -28,7 +27,6 @@ body {
   color: rgb(var(--bone));
   -webkit-font-smoothing: antialiased;
 }
-
 
 ::selection {
   background: rgb(var(--crimson));

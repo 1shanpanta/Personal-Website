@@ -256,9 +256,9 @@ export default function Backdrop() {
       },
     );
 
-    // `prev` is set only while a cut is still playing out.
-    // The first shot also covers the boot screen.
+    // The first shot runs 2.4 s longer, to cover the boot screen.
     let cur = makeShot(CYCLE[0], 0, 2.4 + SHOTS[0]);
+    // Set only while a cut is still playing out.
     let prev: Shot | null = null;
     let cut: Cut = "hard";
     let shot = 0;
