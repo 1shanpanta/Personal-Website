@@ -2,50 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Channel triplets, not hex: Tailwind needs them to apply /opacity modifiers.
-   No accent colour exists on this page. Inversion is the only emphasis. */
+/* No surfaces exist on this page: type sits on the photograph. Crimson appears
+   only in text selection. */
 :root {
-  --font-dot: "DotGothic16";
-  --void: 6 6 6;
-  --panel: 21 21 21;
-  --panel-hi: 31 31 31;
-  --fg: 242 242 242;
-  --dim: 128 128 128;
+  --night: 20 19 18;
+  --bone: 244 242 236;
+  --crimson: 176 16 26;
+}
+
+/* One viewport, no page scroll: the backdrop changes in place. */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 html {
-  background: rgb(var(--void));
+  background: rgb(var(--night));
   color-scheme: dark;
 }
 
-/* The substrate is a pixel grid. Everything on the page sits on the dots. */
 body {
-  background-color: rgb(var(--void));
-  background-image: radial-gradient(
-    circle,
-    rgb(var(--fg) / 0.075) 1px,
-    transparent 1px
-  );
-  background-size: 5px 5px;
-  color: rgb(var(--fg));
+  background: rgb(var(--night));
+  color: rgb(var(--bone));
   -webkit-font-smoothing: antialiased;
 }
 
+
 ::selection {
-  background: rgb(var(--fg));
-  color: rgb(var(--void));
+  background: rgb(var(--crimson));
+  color: rgb(var(--bone));
 }
 
 :focus-visible {
-  outline: 2px solid rgb(var(--fg));
-  outline-offset: 2px;
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+@layer components {
+  /* Type on the photograph. A difference blend dies on mid grey, so content
+     carries its own soft dark halo instead; only the code and HUD invert. */
+  .overlay {
+    color: #fff;
+    text-shadow:
+      0 0 2px rgb(0 0 0 / 0.45),
+      0 0 18px rgb(0 0 0 / 0.5);
+  }
+  .hairline {
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+  /* A small square, the only mark the page uses. */
+  .tick::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 0.6em;
+    vertical-align: 0.12em;
+    background: currentColor;
+  }
+}
+
+/* The mirrored script. Helvetica, not mono: the reel sets its code in a sans. */
+.codex {
+  font: 10px/1.42 "Helvetica Neue", Arial, sans-serif;
+  color: rgb(255 255 255 / 0.82);
+}
+.codex-col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 15%;
+  width: 27%;
+  /* clip, not hidden: rules may run sideways past the column, rows may not. */
+  overflow-x: visible;
+  overflow-y: clip;
+}
+.codex-right {
+  left: auto;
+  right: 15%;
+  width: 22%;
+}
+/* Rules run from each column's outer edge to the centre line. */
+.codex-rule {
+  height: 1px;
+  margin: 6px 0;
+  width: 130%;
+  background: currentColor;
+  opacity: 0.6;
+}
+.codex-right .codex-rule {
+  width: 159%;
+  margin-left: -59%;
+}
+
+@keyframes boot-line {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes boot-out {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(50% 0 50% 0);
+  }
+}
+
+html[data-booted] .boot {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .boot {
+    display: none;
+  }
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }
 }
