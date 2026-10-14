@@ -23,22 +23,21 @@ export default async function Home() {
 
         <div className="overlay relative z-20 grid items-end gap-7 md:gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div>
-            {/* Zen Kaku's light I and P carry a 0.091em left bearing, the label's F
-                0.078em at 11px: pulling the heading back by the difference puts
-                both ink edges on one line at every size. */}
+            {/* Inter's extralight I and P carry a 0.105em left bearing, the label's
+                F about 1px: pulling the heading back by the difference puts both
+                ink edges on one line. */}
             <h1
               aria-label={`${HERO.first} ${HERO.last}`}
-              className="-ml-[0.083em] text-[17vw] font-light leading-[0.86] tracking-[0.04em] md:text-[9vw] lg:text-[7.4vw]"
+              className="-ml-[0.09em] text-[13vw] font-extralight leading-[0.86] tracking-[0.04em] md:text-[6.5vw] lg:text-[5.2vw]"
             >
               <Decode text={HERO.first} />
               <br />
               <Decode text={HERO.last} delay={180} />
             </h1>
-            <p className="mt-5 font-label text-[11px] uppercase tracking-label opacity-80">{HERO.role}</p>
+            <p className="mt-5 text-[11px] uppercase tracking-label opacity-80">{HERO.role}</p>
           </div>
 
           <div>
-            <div className="hairline mb-4" />
             <p className="text-[15px] leading-relaxed">{HERO.bio}</p>
             <div className="mt-4">
               <Socials />
