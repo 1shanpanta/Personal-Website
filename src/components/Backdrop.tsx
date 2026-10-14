@@ -16,10 +16,13 @@ uniform sampler2D u_a,u_b,u_pa,u_pb,u_ink;
 uniform vec4 u_inkA,u_inkB;
 uniform float u_inkAsp;
 uniform vec2 u_res,u_mouse,u_aspA,u_aspB;
-uniform vec3 u_hole,u_colA,u_colB;
+uniform vec3 u_colA,u_colB;
 // Per shot: x haze, y zoom, z melt, w ghost strength.
 uniform vec4 u_shotA,u_shotB,u_moveA,u_moveB;
-uniform float u_time,u_shade,u_mix,u_add,u_flip,u_tint,u_blur;
+// Burn: xy centre, z radius, w strength. Wash: white haze per shot (A, B).
+uniform vec4 u_burn;
+uniform vec2 u_wash;
+uniform float u_time,u_shade,u_mix,u_add,u_flip,u_tint,u_blur,u_warp;
 
 float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
@@ -37,7 +40,7 @@ vec2 frame(vec2 uv,float ia,float zoom,vec2 pan){
 
 // mv: xy pan (drift and jitter), z exposure, w focus pull, all per shot.
 // neg runs the plate as its negative: the reel's polarity cut.
-vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 ink,vec3 tint,float blur,float neg){
+vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 ink,vec3 tint,float blur,float neg,float wash){
   // The plate morphs: noise displacement fast enough that shapes visibly
   // flow and reshape inside a one-second shot, as on the reel.
   vec2 w=(vec2(fbm(uv*2.4+vec2(0.,u_time*.32)),fbm(uv*2.4+vec2(5.2,1.3-u_time*.27)))-.5)*shot.z;
@@ -58,6 +61,8 @@ vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 ink,v
   // Highlights become wide light sources (screen blend of the deep blur).
   float glow=grade(soft,neg);
   col=1.-(1.-col)*(1.-vec3(glow*glow*.65));
+  // Blown-out haze, as on the reel's white shots. It stops above the type.
+  col=mix(col,vec3(1.),wash*smoothstep(.15,.7,soft)*smoothstep(u_shade-.1,u_shade+.2,v.y));
   // A second plate ghosts through, drifting against the first (lighten blend).
   if(shot.w>0.)col=max(col,vec3(grade(lum(texture(p,frame(uv*.94+.03-w*2.,asp.y,shot.y*1.1,-mv.xy)).rgb),0.)*shot.w));
   col*=tint*mv.z;
@@ -67,31 +72,34 @@ vec3 plate(sampler2D t,sampler2D p,vec2 uv,vec2 asp,vec4 shot,vec4 mv,vec4 ink,v
   // plate's brightness so detail survives, topping out at crimson, not pink.
   if(ink.w>0.){
     vec3 k=texture(u_ink,frame(uv+w*1.5,u_inkAsp,ink.z,ink.xy),2.5).rgb;
-    col=mix(col,vec3(.6,.03,.06)*(.3+.9*lum(col)),smoothstep(.05,.4,k.r-max(k.g,k.b))*ink.w);
+    col=mix(col,vec3(.78,.02,.05)*(.25+.85*lum(col)),smoothstep(.04,.22,k.r-max(k.g,k.b))*ink.w);
   }
   return col;
 }
 
 void main(){
-  // The black hole bends the plates around it (deflection r^2/d) and survives every cut.
+  // The cursor bends the plates around it: a bounded swirl and swell, no hole.
   vec2 asp=vec2(u_res.x/u_res.y,1.);
-  vec2 hp=(v-u_hole.xy)*asp;
-  float hd=max(length(hp),1e-4),r=u_hole.z;
-  vec2 uv=v-(hp/hd)*(r*r*1.25/hd)/asp*smoothstep(r*.85,r*1.3,hd);
+  vec2 mp=(v-u_mouse)*asp;
+  float wr=.15*min(asp.x,1.),f=exp(-dot(mp,mp)/(wr*wr))*u_warp,s=sin(f*.9),k=cos(f*.9);
+  vec2 uv=u_mouse+mat2(k,-s,s,k)*mp*(1.-.35*f)/asp;
 
-  vec3 a=plate(u_a,u_pa,uv,u_aspA,u_shotA,u_moveA,u_inkA,u_colA,u_blur,0.);
-  vec3 b=plate(u_b,u_pb,uv,u_aspB,u_shotB,u_moveB,u_inkB,u_colB,0.,u_flip);
+  vec3 a=plate(u_a,u_pa,uv,u_aspA,u_shotA,u_moveA,u_inkA,u_colA,u_blur,0.,u_wash.x);
+  vec3 b=plate(u_b,u_pb,uv,u_aspB,u_shotB,u_moveB,u_inkB,u_colB,0.,u_flip,u_wash.y);
   vec3 c=mix(a,b,u_mix);
   c=mix(c,1.-(1.-a)*(1.-b),u_add);
   c*=mix(vec3(1.),vec3(1.,.5,.42),u_tint);
 
-  // Horizon, photon ring brighter on one turning side, and a wide halo.
-  float ring=exp(-pow((hd-r*1.06)/(r*.05),2.))*(.62+.38*sin(atan(hp.y,hp.x)+u_time*.18));
-  c=mix(c,vec3(0.),smoothstep(r*1.01,r*.9,hd));
-  c+=vec3(1.,.98,.95)*(ring*.95+exp(-pow((hd-r*1.2)/(r*.42),2.))*.22);
+  // The reel's burn: a ragged dark smudge with a glowing rim, placed per shot.
+  if(u_burn.w>0.){
+    vec2 bp=(v-u_burn.xy)*asp;
+    float r=u_burn.z,bd=length(bp)*(1.+(fbm(bp/r*.8+u_time*.25)-.5)*.9);
+    c=1.-(1.-c)*(1.-exp(-pow((bd-r*1.2)/(r*.9),2.))*.5*u_burn.w);
+    c=mix(c,vec3(.1,.075,.065),(1.-smoothstep(r*.15,r*1.25,bd))*.88*u_burn.w);
+  }
 
   c+=smoothstep(.5,.95,fbm(v*vec2(2.2,3.)+u_time*vec2(.025,.012)))*.05*(.3+c);
-  float m=length((v-u_mouse)*asp);
+  float m=length(mp);
   c+=vec3(.95,.93,.9)*exp(-m*m*9.)*.05;
   vec2 q=v-.5;
   c*=1.-dot(q,q)*1.5;
@@ -176,6 +184,8 @@ type Shot = {
   focus: [number, number];
   bloom: number;
   inkPan: [number, number];
+  wash: number;
+  burn: [number, number, number] | null;
 };
 const TINTS = [[1, 1, 1], [1, 1, 1], [1, 1, 1], [0.86, 0.97, 1], [1.06, 0.96, 0.82]];
 const FOCUS: [number, number][] = [[0.6, 0], [0.6, 0], [0, 0.5], [0, 0], [0, 0], [0, 0]];
@@ -198,8 +208,10 @@ const makeShot = (scene: SceneId, start: number, len: number): Shot => {
     jitter: Math.random() < 0.7 ? 0.0001 : rand(0.0005, 0.0015),
     exposure: rand(0.8, 1.3),
     focus: pick(FOCUS),
-    bloom: Math.random() < 0.33 ? rand(0.6, 0.9) : 0,
+    bloom: Math.random() < 0.33 ? rand(0.85, 1) : 0,
     inkPan: [rand(-0.15, 0.15), rand(-0.15, 0.15)],
+    wash: Math.random() < 0.45 ? rand(0.4, 0.85) : 0,
+    burn: Math.random() < 0.3 ? [rand(0.25, 0.75), rand(0.66, 0.9), rand(0.06, 0.12)] : null,
   };
 };
 
@@ -271,12 +283,15 @@ export default function Backdrop() {
     const smooth = { x: 0.5, y: 0.5 };
     const onMove = (e: PointerEvent) => Object.assign(mouse, { x: e.clientX, y: e.clientY, seen: e.pointerType === "mouse" });
     addEventListener("pointermove", onMove, { passive: true });
+    const onLeave = () => (mouse.seen = false);
+    document.documentElement.addEventListener("mouseleave", onLeave);
 
     const title = document.title;
     const onVis = () => (document.title = document.hidden ? "[ signal lost ]" : title);
     document.addEventListener("visibilitychange", onVis);
 
     const pts: Point[] = [];
+    let warp = 0;
     let raf = 0;
     const t0 = performance.now();
     let last = t0;
@@ -353,9 +368,11 @@ export default function Backdrop() {
         const p = progress(s);
         return [s.inkPan[0], s.inkPan[1], 0.8 + 0.9 * p, ink ? s.bloom * (0.25 + 0.75 * p) : 0];
       };
-      // Wide: the hole sits top centre and the type holds the lower half. Phone:
-      // the type climbs high, so the hole shrinks above it and the shade reaches up.
+      // Phone: the type climbs high, so the shade reaches up and the burn shrinks.
       const wide = W >= H;
+      const burn = cur.burn;
+      const ease = 1 - Math.exp(-dt * 6);
+      warp += ((finePointer && mouse.seen && !still ? 1 : 0) - warp) * ease;
 
       gl.useProgram(program.program);
       twgl.setBuffersAndAttributes(gl, program, quad);
@@ -370,7 +387,11 @@ export default function Backdrop() {
         u_mouse: [smooth.x, 1 - smooth.y],
         u_aspA: [a.aspect, (pa ?? a).aspect],
         u_aspB: [b.aspect, (pb ?? b).aspect],
-        u_hole: [0.5 + Math.sin(t * 0.05) * 0.01 * drift, wide ? 0.74 : 0.915, wide ? 0.085 : 0.05],
+        u_burn: burn
+          ? [burn[0], burn[1], burn[2] * (wide ? 1 : 0.7) * (0.85 + 0.3 * progress(cur)), 1]
+          : [0, 0, 0, 0],
+        u_wash: [shotA.wash, cur.wash],
+        u_warp: warp,
         u_shade: wide ? 0.6 : 0.86,
         u_colA: shotA.tint,
         u_colB: cur.tint,
@@ -453,6 +474,7 @@ export default function Backdrop() {
       cancelAnimationFrame(raf);
       clearTimeout(warm);
       removeEventListener("pointermove", onMove);
+      document.documentElement.removeEventListener("mouseleave", onLeave);
       document.removeEventListener("visibilitychange", onVis);
     };
   }, []);
