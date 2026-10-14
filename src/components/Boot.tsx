@@ -44,7 +44,7 @@ export default function Boot({ total }: { total: string }) {
         }}
         className="boot fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-black px-6 [animation:boot-out_0.32s_cubic-bezier(0.7,0,0.84,0)_1.9s_forwards]"
       >
-        <div className="w-full max-w-sm font-label text-[10px] uppercase tracking-label text-white">
+        <div className="w-full max-w-sm text-[10px] uppercase tracking-label text-white">
           {lines.map((line, i) => (
             <p
               key={line}

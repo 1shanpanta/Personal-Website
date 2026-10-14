@@ -47,11 +47,6 @@ body {
       0 0 2px rgb(0 0 0 / 0.45),
       0 0 18px rgb(0 0 0 / 0.5);
   }
-  .hairline {
-    height: 1px;
-    background: currentColor;
-    opacity: 0.45;
-  }
   /* A small square, the only mark the page uses. */
   .tick::before {
     content: "";
@@ -64,9 +59,10 @@ body {
   }
 }
 
-/* The mirrored script. Helvetica, not mono: the reel sets its code in a sans. */
+/* The mirrored script. A sans, not mono: the reel sets its code in a sans. */
 .codex {
-  font: 10px/1.42 "Helvetica Neue", Arial, sans-serif;
+  font-size: 10px;
+  line-height: 1.42;
   color: rgb(255 255 255 / 0.82);
 }
 .codex-col {

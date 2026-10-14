@@ -1,12 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Zen_Kaku_Gothic_New } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const ui = Zen_Kaku_Gothic_New({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  variable: "--font-ui",
-});
+// The one typeface on the page, close to the reel's Helvetica; a single variable file.
+const ui = Inter({ subsets: ["latin"], variable: "--font-ui" });
 
 const DESCRIPTION =
   "Full-stack developer in Kathmandu. I build free, local alternatives to software you should not have to subscribe to.";

@@ -6,8 +6,6 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-ui)", "system-ui", "sans-serif"],
-        // Labels, figures and coordinates: the reel sets all of them in Helvetica.
-        label: ['"Helvetica Neue"', "Arial", "sans-serif"],
       },
       letterSpacing: {
         label: "0.16em",
