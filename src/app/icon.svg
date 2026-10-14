@@ -1,12 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- The reel's burn: a dark smudge with a glowing rim on white haze. -->
+  <!-- The reel's burn: a ragged, soft dark smudge with a glowing rim in white haze. -->
   <defs>
-    <radialGradient id="b">
-      <stop offset="0" stop-color="#0c0908" />
-      <stop offset=".45" stop-color="#1a1310" />
-      <stop offset=".62" stop-color="#ffffff" />
-      <stop offset="1" stop-color="#d9d9d9" />
+    <radialGradient id="haze" cx=".45" cy=".4" r=".8">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset=".7" stop-color="#e2e1de" />
+      <stop offset="1" stop-color="#8a8784" />
     </radialGradient>
+    <radialGradient id="core" cx=".45" cy=".42">
+      <stop offset="0" stop-color="#1c1714" />
+      <stop offset=".7" stop-color="#2e2620" />
+      <stop offset="1" stop-color="#5a4a3e" />
+    </radialGradient>
+    <filter id="rag" x="-40%" y="-40%" width="180%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency=".11" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="9" />
+      <feGaussianBlur stdDeviation="1.7" />
+    </filter>
   </defs>
-  <rect width="32" height="32" rx="6" fill="url(#b)" />
+  <rect width="32" height="32" rx="6" fill="url(#haze)" />
+  <g filter="url(#rag)" opacity=".92">
+    <ellipse cx="14" cy="15" rx="8" ry="7" fill="url(#core)" />
+    <ellipse cx="18.5" cy="19" rx="5" ry="4" fill="url(#core)" />
+  </g>
 </svg>
