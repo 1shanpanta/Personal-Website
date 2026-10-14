@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://ishanpanta.com.np"),
   title: "Ishan Panta",
   description: DESCRIPTION,
+  // www serves the same page; this names the bare domain as the one to index.
+  alternates: { canonical: "/" },
   openGraph: {
     title: "Ishan Panta",
     description: DESCRIPTION,
