@@ -217,12 +217,6 @@ const makeShot = (scene: SceneId, start: number, len: number): Shot => {
 const FRAME = 1 / 60;
 const DEFOCUS = 0.35;
 const FLIP = 0.5;
-const WIRE_FLASH = 3 * FRAME;
-const WIRES: [string, number][] = [
-  ["rgba(255,255,255,0.55)", 0],
-  ["rgba(196,232,186,0.4)", 1.2],
-  ["rgba(238,226,168,0.35)", -1.2],
-];
 
 /**
  * The fixed world behind the page: a shader over the generated plates that
@@ -286,7 +280,6 @@ export default function Backdrop() {
 
     const pts: Point[] = [];
     let warp = 0;
-    let flashUntil = 0;
     let raf = 0;
     const t0 = performance.now();
     let last = t0;
@@ -307,7 +300,6 @@ export default function Backdrop() {
         cut = nextCut;
         cutAt = t + cur.len;
         dispatchEvent(new Event(CUT_EVENT));
-        if (Math.random() < 0.6) flashUntil = t + WIRE_FLASH;
         nextCut = pickCut(SHOTS[shot]);
       }
       // Hard swaps at once; settle eases the new shot in, halving the gap each
@@ -404,22 +396,11 @@ export default function Backdrop() {
       });
       twgl.drawBufferInfo(gl, quad);
 
-      // The reel's wires flash for a few frames: on most cuts, and now and then mid-shot.
-      if (!still && Math.random() < dt * 0.6) flashUntil = t + WIRE_FLASH;
-      drawHud(b, zoom(cur), camB[0], camB[1], W, H, t, t < flashUntil);
+      drawHud(b, zoom(cur), camB[0], camB[1], W, H, t);
     };
 
     // The HUD inverts frame() in the shader, so its labels stay pinned to the plate.
-    const drawHud = (
-      p: Plate,
-      zoom: number,
-      panX: number,
-      panY: number,
-      W: number,
-      H: number,
-      t: number,
-      flash: boolean,
-    ) => {
+    const drawHud = (p: Plate, zoom: number, panX: number, panY: number, W: number, H: number, t: number) => {
       const va = W / H;
       const targets = p.peaks
         .map(({ x, y }) => {
@@ -440,23 +421,6 @@ export default function Backdrop() {
       pts.length = targets.length;
 
       ctx.clearRect(0, 0, W, H);
-      // Wires exist only during a flash: every point to every other, each line
-      // laid three times with a small offset and a pale colour shift.
-      if (flash) {
-        const web = pts.slice(0, 6);
-        ctx.lineWidth = 0.6;
-        WIRES.forEach(([color, off]) => {
-          ctx.strokeStyle = color;
-          ctx.beginPath();
-          web.forEach((m, i) =>
-            web.slice(i + 1).forEach((n) => {
-              ctx.moveTo(m.x + off, m.y);
-              ctx.lineTo(n.x + off, n.y + off);
-            }),
-          );
-          ctx.stroke();
-        });
-      }
       // Labels without markers, small and dim; every other point carries a
       // second reading just below it, as the reel's tracker doubles up.
       ctx.fillStyle = "rgba(222,216,198,0.62)";
