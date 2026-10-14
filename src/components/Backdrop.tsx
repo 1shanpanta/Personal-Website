@@ -218,6 +218,12 @@ const makeShot = (scene: SceneId, start: number, len: number): Shot => {
 const FRAME = 1 / 60;
 const DEFOCUS = 0.35;
 const FLIP = 0.5;
+const WIRE_FLASH = 3 * FRAME;
+const WIRES: [string, number][] = [
+  ["rgba(255,255,255,0.55)", 0],
+  ["rgba(196,232,186,0.4)", 1.2],
+  ["rgba(238,226,168,0.35)", -1.2],
+];
 
 /**
  * The fixed world behind the page: a shader over the generated plates that
@@ -292,6 +298,7 @@ export default function Backdrop() {
 
     const pts: Point[] = [];
     let warp = 0;
+    let flashUntil = 0;
     let raf = 0;
     const t0 = performance.now();
     let last = t0;
@@ -312,6 +319,7 @@ export default function Backdrop() {
         cut = nextCut;
         cutAt = t + cur.len;
         dispatchEvent(new Event(CUT_EVENT));
+        if (Math.random() < 0.6) flashUntil = t + WIRE_FLASH;
         nextCut = pickCut(SHOTS[shot]);
       }
       // Hard swaps at once; settle eases the new shot in, halving the gap each
@@ -410,11 +418,22 @@ export default function Backdrop() {
       });
       twgl.drawBufferInfo(gl, quad);
 
-      drawHud(b, zoom(cur), camB[0], camB[1], W, H, t);
+      // The reel's wires flash for a few frames: on most cuts, and now and then mid-shot.
+      if (!still && Math.random() < dt * 0.6) flashUntil = t + WIRE_FLASH;
+      drawHud(b, zoom(cur), camB[0], camB[1], W, H, t, t < flashUntil);
     };
 
     // The HUD inverts frame() in the shader, so its labels stay pinned to the plate.
-    const drawHud = (p: Plate, zoom: number, panX: number, panY: number, W: number, H: number, t: number) => {
+    const drawHud = (
+      p: Plate,
+      zoom: number,
+      panX: number,
+      panY: number,
+      W: number,
+      H: number,
+      t: number,
+      flash: boolean,
+    ) => {
       const va = W / H;
       const targets = p.peaks
         .map(({ x, y }) => {
@@ -426,7 +445,7 @@ export default function Backdrop() {
         })
         .filter(({ x, y }) => x > 28 && x < W - 110 && y > 70 && y < H - 28)
         .slice(0, W < 700 ? 5 : 9);
-      // Fast enough that the wires jump with each cut, as the reel's tracker does.
+      // Fast enough that the labels jump with each cut, as the reel's tracker does.
       targets.forEach((q, i) => {
         const pt = (pts[i] ??= { ...q });
         pt.x += (q.x - pt.x) * 0.25;
@@ -435,38 +454,35 @@ export default function Backdrop() {
       pts.length = targets.length;
 
       ctx.clearRect(0, 0, W, H);
-      ctx.lineWidth = 0.75;
-      ctx.strokeStyle = "rgba(255,255,255,0.32)";
-      ctx.fillStyle = "rgba(255,255,255,0.74)";
-      ctx.font = `10px "Helvetica Neue", Arial, sans-serif`;
-      ctx.beginPath();
-      const line = (m: Point, n: Point) => {
-        ctx.moveTo(m.x, m.y);
-        ctx.lineTo(n.x, n.y);
-      };
-      // A fan from the strongest point plus a chain, like blob-tracking wires.
+      // Wires exist only during a flash: every point to every other, each line
+      // laid three times with a small offset and a pale colour shift.
+      if (flash) {
+        const web = pts.slice(0, 6);
+        ctx.lineWidth = 0.6;
+        WIRES.forEach(([color, off]) => {
+          ctx.strokeStyle = color;
+          ctx.beginPath();
+          web.forEach((m, i) =>
+            web.slice(i + 1).forEach((n) => {
+              ctx.moveTo(m.x + off, m.y);
+              ctx.lineTo(n.x + off, n.y + off);
+            }),
+          );
+          ctx.stroke();
+        });
+      }
+      // Labels without markers, small and dim; every other point carries a
+      // second reading just below it, as the reel's tracker doubles up.
+      ctx.fillStyle = "rgba(222,216,198,0.62)";
+      ctx.font = `9px "Helvetica Neue", Arial, sans-serif`;
+      const label = (x: number, y: number, at: Point) =>
+        ctx.fillText(`${x.toFixed(2)} / ${y.toFixed(2)}`, at.x, at.y);
       pts.forEach((q, i) => {
-        if (i > 0) line(pts[0], q);
-        if (i > 1 && i % 2 === 0) line(pts[i - 1], q);
-      });
-      const cursor = finePointer && mouse.seen;
-      if (cursor)
-        [...pts]
-          .sort((m, n) => Math.hypot(m.x - mouse.x, m.y - mouse.y) - Math.hypot(n.x - mouse.x, n.y - mouse.y))
-          .slice(0, 3)
-          .forEach((q) => line(mouse, q));
-      ctx.stroke();
-      pts.forEach((q, i) => {
-        ctx.fillRect(q.x - 1.5, q.y - 1.5, 3, 3);
         const jx = q.x + Math.sin(t * 0.9 + i) * 0.35;
         const jy = q.y + Math.cos(t * 0.7 + i * 2) * 0.35;
-        ctx.fillText(`${jx.toFixed(2)} / ${jy.toFixed(2)}`, q.x + 7, q.y - 6);
+        label(jx, jy, { x: q.x + 4, y: q.y - 3 });
+        if (i % 2) label(jx - 5.2, jy - 12.9, { x: q.x - 2, y: q.y + 8 });
       });
-      if (cursor) {
-        ctx.strokeStyle = "rgba(255,255,255,0.85)";
-        ctx.strokeRect(mouse.x - 11, mouse.y - 11, 22, 22);
-        ctx.fillText(`${mouse.x.toFixed(2)} / ${mouse.y.toFixed(2)}`, mouse.x + 16, mouse.y + 24);
-      }
     };
 
     raf = requestAnimationFrame(loop);
