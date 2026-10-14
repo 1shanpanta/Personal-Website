@@ -28,7 +28,7 @@ export default async function Home() {
                 ink edges on one line. */}
             <h1
               aria-label={`${HERO.first} ${HERO.last}`}
-              className="-ml-[0.09em] text-[13vw] font-extralight leading-[0.86] tracking-[0.04em] md:text-[6.5vw] lg:text-[5.2vw]"
+              className="-ml-[0.09em] text-[10vw] font-extralight leading-[0.86] tracking-[0.04em] md:text-[5vw] lg:text-[4vw]"
             >
               <Decode text={HERO.first} />
               <br />
