@@ -13,7 +13,9 @@ bun run build
 
 ## Stack
 
-- Next.js 14, app router, server components only
+- Next.js 14, app router, static export
 - Tailwind
-- IBM Plex Sans and Mono through `next/font`
-- DotGothic16 through a stylesheet link, because `next/font` has no Japanese subset
+- A WebGL2 backdrop in `src/components/Backdrop.tsx` (through `twgl.js`), over the plates in `public/scenes`
+- Zen Kaku Gothic New through `next/font`
+- Icons from `react-icons` (Font Awesome 6)
+- The score in `public/audio/score.m4a`, generated with Vertex AI Lyria
